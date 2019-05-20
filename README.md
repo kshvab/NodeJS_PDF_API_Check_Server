@@ -12,6 +12,8 @@ from external *HTML to PDF* services, like [Docraptor](Docraptor.com) or [Api2pd
 
 ## Suggested behaviour of the API
 
+Invoice fields for valiation are marked with yellow color in the [example invoice PDF](Examples/demo_invoice.pdf))
+
 Request payload: 
 * JSON data to be validated in PDF
 * URL to generated PDF file ([example](Examples/demo_invoice.pdf))
