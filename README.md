@@ -14,7 +14,7 @@ from external *HTML to PDF* services, like [Docraptor](Docraptor.com) or [Api2pd
 
 Request payload: 
 * JSON data to be validated in PDF
-* URL to generated PDF file (example)
+* URL to generated PDF file ([example](Examples/demo_invoice.pdf))
 
 Response:
 * parametr if content is valid
