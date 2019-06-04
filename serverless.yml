@@ -1,0 +1,54 @@
+service: sls-api # NOTE: update this with your service name
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  region: eu-central-1
+
+plugins:
+  - serverless-offline
+  - serverless-openapi-documentation
+
+functions:
+  checkPDF:
+    handler: src/check/check.handler
+    events:
+      - http:
+          path: /check
+          method: post
+  defineRule:
+    handler: src/define/define.handler
+    events:
+      - http:
+          path: /define
+          method: post
+  listRules:
+    handler: src/rules/list.handler
+    events:
+      - http:
+          path: /rules
+          method: get
+  createRule:
+    handler: src/rules/create.handler
+    events:
+      - http:
+          path: /rules
+          method: post
+  getRule:
+    handler: src/rules/findone.handler
+    events:
+      - http:
+          path: /rules/{targetName}
+          method: get
+          request:
+            parametres:
+              targetName: true
+  delRule:
+    handler: src/rules/deleteone.handler
+    events:
+      - http:
+          path: /rules/{targetName}
+          method: delete
+          request:
+            parametres:
+              targetName: true

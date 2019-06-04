@@ -1,0 +1,300 @@
+openapi: 3.0.1
+info:
+  title: Swagger PFD API Checker
+  description: >-
+    This is a AWS Lambda Application PFD API Checker.   
+  contact:
+    email: kshvab@gmail.com
+  version: 1.0.0
+servers:
+  - url: 'https://xwdp1poorb.execute-api.eu-central-1.amazonaws.com/dev'
+  - url: 'http://xwdp1poorb.execute-api.eu-central-1.amazonaws.com/dev'
+tags:
+  - name: rules
+    description: Everything about rules
+  - name: check
+    description: сheck PDF files (main task)
+  - name: define
+    description: Define new search rules
+paths:
+  /rules:
+    get:
+      tags:
+        - rules
+      summary: Returns array of rules
+      description: >-
+        Returns array of rules
+      operationId: getListOfRules
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Rule'
+        '404':
+          description: Rules not found
+          content: {}
+      deprecated: false
+    post:
+      tags:
+        - rules
+      summary: Add a new rule to the DB
+      operationId: addRule
+      requestBody:
+        description: Rule object that needs to be added to the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Rule'
+        required: true
+      responses:
+        '200':
+          description: Rule saved
+          content: {}
+        '405':
+          description: Invalid input
+          content: {}
+  '/rules/{targetName}':
+    get:
+      tags:
+        - rules
+      summary: Find rule by targetName
+      description: Returns a single rule
+      operationId: getRuleByTargetName
+      parameters:
+        - name: targetName
+          in: path
+          description: targetName of rule to return
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rule'
+        '400':
+          description: Invalid targetName supplied
+          content: {}
+        '404':
+          description: Rule not found
+          content: {}
+    delete:
+      tags:
+        - rules
+      summary: Deletes a rule
+      operationId: deleteRule
+      parameters:
+        - name: targetName
+          in: path
+          description: Rule with targetName to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Rule deleted
+          content: {}
+        '400':
+          description: Invalid targetName supplied
+          content: {}
+        '404':
+          description: Rule not found
+          content: {}
+  /define:
+    post:
+      tags:
+        - define
+      summary: Define a new rule
+      operationId: defineRule
+      requestBody:
+        description: Request object that consist of pdfUrl and rule object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DefineRequestObj'
+        required: true
+      responses:
+        '200':
+          description: The result of the rule
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefineResponseObj'
+        '405':
+          description: Invalid input
+          content: {}
+  /check:
+    post:
+      tags:
+        - check
+      summary: Check the PDF
+      operationId: checkPDF
+      requestBody:
+        description: Request object that consist of pdfUrl and fields for check array
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckRequestObj'
+        required: true
+      responses:
+        '200':
+          description: The result of the check
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckResponseObj'
+        '405':
+          description: Invalid input
+          content: {}  
+
+
+components:
+  schemas:
+    textFilters:
+      type: object
+      properties:
+        startCorrection:
+          type: integer
+          format: int64
+        endCorrection:
+          type: integer
+          format: int64
+        lineBreaksToBlankSpases:
+          type: boolean
+          default: false
+        findAndChange:
+          type: array
+          xml:
+            name: textFilters
+            wrapped: true
+          items:
+            $ref: '#/components/schemas/findAndChange'
+    findAndChange:
+      type: object
+      properties:
+        oldSymbol:
+          type: string
+        newSymbol:
+          type: string
+      xml:
+        name: findAndChange    
+    pdfUrl:
+      type: string
+      example: https://ucba6f314c0299.dl.pdf
+    DefineRequestObj:
+      type: object
+      properties:
+        pdfUrl:
+          $ref: '#/components/schemas/pdfUrl'
+        rule:
+          $ref: '#/components/schemas/Rule'
+    DefineResponseObj:
+      type: object
+      properties:
+        fullText:
+          $ref: '#/components/schemas/fullText'
+        result:
+          $ref: '#/components/schemas/result'
+    CheckRequestObj:
+      type: object
+      properties:
+        pdfUrl:
+          $ref: '#/components/schemas/pdfUrl'
+        fieldsArr:
+          $ref: '#/components/schemas/fieldsArr'
+    fieldsArr:
+      type: array
+      xml:
+        name: fieldsArr
+        wrapped: true
+      items: 
+        $ref: '#/components/schemas/fieldsArrItem'
+    fieldsArrItem:
+      type: object
+      properties:
+        targetName:
+          type: string
+          example: bankName
+        targetValue:
+          type: string
+          example: JPMorgan
+    CheckResponseObj:  
+      required:
+        - isPDFok
+      type: object
+      properties:
+        isPDFok:
+          type: boolean
+          default: false
+        errorsArr:
+          type: array
+          items: 
+            $ref: '#/components/schemas/errorsArr'
+    errorsArr:
+      type: object
+      properties:
+        fieldName:
+          type: string
+          example: providerVatId
+        errorDescription:
+          type: string
+          example: Field values do not match           
+    fullText:
+      type: string
+      example: REVOLGY BUSINESS SOLUTIONS S.R.O., KLIMENTSKÁ 1246/1
+    result:
+      type: string
+      example: REVOLGY
+    Rule:
+      required:
+        - pdfLayout
+        - targetName
+        - anchorMethod
+        - anchorValue
+        - determinationMethod
+        - determinationValue
+        - textFilters
+      type: object
+      properties:
+        
+        pdfLayout:
+          type: string
+          example: mainInvoice
+        targetName:
+          type: string
+          example: providerVatId
+        anchorMethod:
+          type: string
+          example: anchorBeforeTarget
+          description: Anchor to target relation method
+          enum:
+            - anchorBeforeTarget
+            - beginsWithAnchor
+            - anchorAfterTarget
+            - endsWithAnchor
+        anchorValue:
+          type: string
+          example: VAT ID
+        determinationMethod:  
+          type: string
+          example: linesCount
+          description: Target location method
+          enum:
+            - wordsCount
+            - linesCount
+            - textLength
+        determinationValue:
+          type: integer
+          format: int64
+          example: 1
+        textFilters:
+          $ref: '#/components/schemas/textFilters'
+      xml:
+        name: Rule
