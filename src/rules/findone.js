@@ -6,12 +6,19 @@ module.exports.handler = (event, context, callback) => {
 
   connectToDatabase().then(() => {
     Rule.find({ targetName: event.pathParameters.targetName })
-      .then(rule =>
-        callback(null, {
-          statusCode: 200,
-          body: JSON.stringify(rule)
-        })
-      )
+      .then(rule => {
+        if (!rule.length) {
+          callback(null, {
+            statusCode: 404,
+            body: JSON.stringify({ message: 'Rule not found' })
+          });
+        } else {
+          callback(null, {
+            statusCode: 200,
+            body: JSON.stringify(rule)
+          });
+        }
+      })
       .catch(err =>
         callback(null, {
           statusCode: err.statusCode || 500,

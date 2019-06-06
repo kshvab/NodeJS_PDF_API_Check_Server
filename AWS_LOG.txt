@@ -1,0 +1,26 @@
+Serverless: Updating Stack...
+Serverless: Checking Stack update progress...
+............................................
+Serverless: Stack update finished...
+Service Information
+service: sls-api
+stage: dev
+region: eu-central-1
+stack: sls-api-dev
+resources: 38
+api keys:
+  None
+endpoints:
+  POST - https://xwdp1poorb.execute-api.eu-central-1.amazonaws.com/dev/check
+  POST - https://xwdp1poorb.execute-api.eu-central-1.amazonaws.com/dev/define
+  GET - https://xwdp1poorb.execute-api.eu-central-1.amazonaws.com/dev/rules
+  POST - https://xwdp1poorb.execute-api.eu-central-1.amazonaws.com/dev/rules
+  GET - https://xwdp1poorb.execute-api.eu-central-1.amazonaws.com/dev/rules/{targetName}
+  DELETE - https://xwdp1poorb.execute-api.eu-central-1.amazonaws.com/dev/rules/{targetName}
+functions:
+  checkPDF: sls-api-dev-checkPDF
+  defineRule: sls-api-dev-defineRule
+  listRules: sls-api-dev-listRules
+  createRule: sls-api-dev-createRule
+  getRule: sls-api-dev-getRule
+  delRule: sls-api-dev-delRule

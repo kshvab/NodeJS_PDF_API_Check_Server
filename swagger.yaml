@@ -34,8 +34,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Rule'
-        '404':
-          description: Rules not found
+        '500':
+          description: Could not fetch the rules
           content: {}
       deprecated: false
     post:
@@ -52,10 +52,13 @@ paths:
         required: true
       responses:
         '200':
-          description: Rule saved
-          content: {}
-        '405':
-          description: Invalid input
+          description: The result of the rule saving
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rule'
+        '500':
+          description: Could not create the rule.
           content: {}
   '/rules/{targetName}':
     get:
@@ -79,8 +82,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Rule'
-        '400':
-          description: Invalid targetName supplied
+        '500':
+          description: Could not fetch the rule.
           content: {}
         '404':
           description: Rule not found
@@ -99,13 +102,10 @@ paths:
             type: string
       responses:
         '200':
-          description: Rule deleted
+          description: Removed Rule with targetName {targetName}
           content: {}
-        '400':
-          description: Invalid targetName supplied
-          content: {}
-        '404':
-          description: Rule not found
+        '500':
+          description: Could not fetch the rule.
           content: {}
   /define:
     post:
@@ -127,8 +127,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DefineResponseObj'
-        '405':
-          description: Invalid input
+        '500':
+          description: Could not parse the file.
           content: {}
   /check:
     post:
@@ -150,8 +150,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CheckResponseObj'
-        '405':
-          description: Invalid input
+        '500':
+          description: Could not fetch the rule.
           content: {}  
 
 

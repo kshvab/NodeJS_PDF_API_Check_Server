@@ -1,6 +1,6 @@
 {
   "name": "serverless",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Node js to Lambda API for PDF checking",
   "main": "handler.js",
   "dependencies": {
