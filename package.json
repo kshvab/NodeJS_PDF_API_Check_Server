@@ -6,7 +6,7 @@
   "dependencies": {
     "crawler-request": "^1.2.2",
     "dotenv": "^8.0.0",
-    "mongoose": "^5.5.12"
+    "mongoose": "^5.7.5"
   },
   "devDependencies": {
     "serverless-offline": "^5.0.0",
