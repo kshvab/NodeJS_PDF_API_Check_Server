@@ -9,7 +9,7 @@
     "mongoose": "^5.5.12"
   },
   "devDependencies": {
-    "serverless-offline": "^5.0.0",
+    "serverless-offline": "^12.0.3",
     "serverless-openapi-documentation": "^0.4.0"
   },
   "scripts": {
